@@ -1,14 +1,13 @@
 *__pycache__/*
 .github/
 .vscode/
-store/
 tests/
 .DS_Store
 .gitignore
 .gitmodules
 .git
+.markdownlint.json
 .pylintrc
-Makefile
 README.md
 rsync-exclude
 TestDriver.py
