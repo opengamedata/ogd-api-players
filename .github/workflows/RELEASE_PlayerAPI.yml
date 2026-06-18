@@ -9,11 +9,6 @@ on:
   release:
     types: released
 
-env:
-  DEPLOY_HOST: ${{ vars.OGD_SERVICES_HOST }}
-  DEPLOY_DIR:                               ${{ vars.API_BASE_PATH }}/players/
-  DEPLOY_URL:  ${{ vars.OGD_SERVICES_HOST }}/${{ vars.API_BASE_URL }}/players/app.wsgi
-
 jobs:
   release_deploy:
     name: Release Deploy
