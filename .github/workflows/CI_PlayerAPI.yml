@@ -1,0 +1,22 @@
+# Workflow to build and deploy designer dashboard to server.
+name: CI Script - PlayerAPI
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'push' && github.event.head_commit.message || 'Manual Run') }}
+on:
+  workflow_dispatch:
+  push:
+    paths:
+    - '.github/workflows/CI_PlayerAPI.yml'
+    - '.github/actions/**'
+    - 'src/**'
+    - 'requirements.txt'
+
+jobs:
+  ci_deploy:
+    name: CI Deploy
+    # needs: build
+    uses: ./.github/workflows/DEPLOY_FileAPI.yml
+    with:
+      deploy_host: ${{ vars.OGD_STAGING_HOST }}
+      branch: ${{ github.ref_name }}
+      remove: false
+    secrets: inherit

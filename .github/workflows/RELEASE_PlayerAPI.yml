@@ -1,0 +1,23 @@
+# Workflow to build and deploy designer dashboard to server.
+name: Release Script - PlayerAPI
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'release' && github.ref || 'Manual Run') }}
+on:
+  #create:
+  #  tags:
+  #    - '*'
+  workflow_dispatch:
+  release:
+    types: released
+
+jobs:
+  release_deploy:
+    name: Release Deploy
+    if: github.event.action == 'released'
+    # needs: [build, pypi_release, wait_for_pypi]
+    uses: ./.github/workflows/DEPLOY_FileAPI.yml
+    with:
+      deploy_host: ${{ vars.OGD_SERVICES_HOST }}
+      branch: ${{ github.ref_name }}
+      as_latest: true
+      remove: false
+    secrets: inherit

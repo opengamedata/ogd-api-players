@@ -1,0 +1,19 @@
+# Workflow to clean out the directory where a deleted "APIUtils" branch's files were deployed on the CI server
+name: Cleanup Dead Branch - PlayerAPI
+run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'delete' && github.event.ref || 'Manual Run') }}
+
+on:
+  delete: # Trigger automatically when we do a deletion of a branch
+  workflow_dispatch:
+    
+jobs:
+  branch_delete:
+    name: Dead Branch Cleanup
+    if: github.event.ref_type == 'branch'
+    uses: ./.github/workflows/DEPLOY_PlayerAPI.yml
+    with:
+      deploy_host: ${{ vars.OGD_STAGING_HOST }}
+      branch: ${{ github.event.ref }}
+      remove: true
+      as_latest: false
+    secrets: inherit
