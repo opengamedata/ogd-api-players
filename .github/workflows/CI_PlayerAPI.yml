@@ -5,7 +5,7 @@ on:
   workflow_dispatch:
   push:
     paths:
-    - '.github/workflows/CI_PlayersAPI.yml'
+    - '.github/workflows/CI_PlayerAPI.yml'
     - '.github/actions/**'
     - 'src/**'
     - 'requirements.txt'
@@ -29,7 +29,7 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
     - name: Set up Config File
-      uses: ./.github/actions/PlayersAPI
+      uses: ./.github/actions/PlayerAPI
       with:
         db_host: ${{ vars.OGD_LOGGER_HOST }}
         db_user: ${{secrets.SQL_USER}}
