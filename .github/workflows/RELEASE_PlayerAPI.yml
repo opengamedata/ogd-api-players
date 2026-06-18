@@ -14,7 +14,7 @@ jobs:
     name: Release Deploy
     if: github.event.action == 'released'
     # needs: [build, pypi_release, wait_for_pypi]
-    uses: ./.github/workflows/DEPLOY_FileAPI.yml
+    uses: ./.github/workflows/DEPLOY_PlayerAPI.yml
     with:
       deploy_host: ${{ vars.OGD_SERVICES_HOST }}
       branch: ${{ github.ref_name }}
