@@ -1,5 +1,5 @@
 # Workflow to build and deploy designer dashboard to server.
-name: Release Script - GameStates API
+name: Release Script - Players API
 run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'release' && github.ref || 'Manual Run') }}
 on:
   #create:
@@ -11,12 +11,12 @@ on:
 
 env:
   DEPLOY_HOST: ${{ vars.OGD_SERVICES_HOST }}
-  DEPLOY_DIR:                               ${{ vars.API_BASE_PATH }}/gamestates/
-  DEPLOY_URL:  ${{ vars.OGD_SERVICES_HOST }}/${{ vars.API_BASE_URL }}/gamestates/app.wsgi
+  DEPLOY_DIR:                               ${{ vars.API_BASE_PATH }}/players/
+  DEPLOY_URL:  ${{ vars.OGD_SERVICES_HOST }}/${{ vars.API_BASE_URL }}/players/app.wsgi
 
 jobs:
   production_deploy:
-    name: Release Deploy of GameStates API
+    name: Release Deploy of Players API
     runs-on: ubuntu-22.04
     concurrency:
       group: ${{ github.repository }}-${{ github.ref }}-${{ github.workflow }}

@@ -1,4 +1,4 @@
-# opengamedata-api-gamestates
+# opengamedata-api-players
 
 Repository for the OpenGameData Player ID + State Saving API. These allow users of `opengamedata-unity` and `opengamedata-js-log` to obtain randomly-generated IDs to display for users, which can then be used to save and restore game states.
 
@@ -37,7 +37,7 @@ Lastly, at this point in time, the `<server_path>` is `https://fieldday-web.wcer
 
 ---
 
-### GameState API
+### Players API
 
 #### Save and retrieve game states
 
