@@ -14,7 +14,7 @@ jobs:
   ci_deploy:
     name: CI Deploy
     # needs: build
-    uses: ./.github/workflows/DEPLOY_FileAPI.yml
+    uses: ./.github/workflows/DEPLOY_PlayerAPI.yml
     with:
       deploy_host: ${{ vars.OGD_STAGING_HOST }}
       branch: ${{ github.ref_name }}
