@@ -1,6 +1,6 @@
 flask==2.3.3
 flask-restful==0.3.10
-mysql-connector-python==8.0.25
+mysql-connector-python==9.3.0
 opengamedata-core==0.0.14
-opengamedata-common==1.1.*
-opengamedata-api-utils==1.1.*
+opengamedata-common>=2.0.0b6
+opengamedata-api-utils==2.0.*
