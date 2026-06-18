@@ -9,7 +9,7 @@ if not HOME_FOLDER in sys.path:
     sys.path.append(HOME_FOLDER)
 
 # 2. Ensure this path is writable by the user the WSGI daemon runs as
-os.environ['OGD_FLASK_APP_LOG_FILE'] = '/var/log/flask-apps/player-gamestate-app.log'
+os.environ['OGD_FLASK_APP_LOG_FILE'] = '/var/log/flask-apps/players-api.log'
 
 # 3. Set up venv
 py_version = ".".join([str(sys.version_info.major), str(sys.version_info.minor)])
