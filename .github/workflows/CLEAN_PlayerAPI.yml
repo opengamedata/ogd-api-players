@@ -5,11 +5,6 @@ run-name: ${{ format('{0} - {1}', github.workflow, github.event_name == 'delete'
 on:
   delete: # Trigger automatically when we do a deletion of a branch
   workflow_dispatch:
-
-env:
-  DEPLOY_HOST: ${{ vars.OGD_STAGING_HOST }}
-  DEPLOY_DIR:                              ${{ vars.API_BASE_PATH }}/${{ github.event.repository.name }}/${{ github.event.ref }}
-  DEPLOY_URL:  ${{ vars.OGD_STAGING_HOST }}/${{ vars.API_BASE_URL }}/${{ github.event.repository.name }}/${{ github.event.ref }}/app.wsgi
     
 jobs:
   branch_delete:
