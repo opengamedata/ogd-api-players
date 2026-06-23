@@ -29,14 +29,14 @@ inputs:
     description: "Name of the database containing data on existing users"
     required: true
     default: 'fd_users placeholder'
-  app_path:
-    description: "The name of the wsgi app being deployed"
+  remote_app_path:
+    description: "Remote directory where WSGI app will be deployed, not including the file itself"
     required: true
-    default: "opengamedata.wsgi"
-  deploy_path:
-    description: "The path on the server in which the app is deployed"
+    default: 'var/www/wsgi-bin/apis/players/'
+  local_app_path:
+    description: "Local path to the folder containing the WSGI app to be deployed"
     required: true
-    default: '/var/www/wsgi-bin'
+    default: 'src'
   config_path:
     description: "Local path to config folder"
     required: false
@@ -66,5 +66,5 @@ runs:
       run: sed -i 's@"VER":0@"VER":${{inputs.api_version}}@g'  ${{ inputs.config_path }}/config.py
       shell: bash
     - name: Set Path to App
-      run: sed -i 's@DEPLOY_PATH@${{inputs.deploy_path}}@g' ${{inputs.app_path}}
+      run: sed -i 's@DEPLOY_PATH@${{inputs.remote_app_path}}@g' ${{inputs.local_app_path}}/app.wsgi
       shell: bash
