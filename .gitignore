@@ -2,7 +2,7 @@
 shared/config/*config.py
 tests/t_config.py
 tests/Makefile
-.vscode
+.vscode/*.json
 .pylintrc
 
 # Byte-compiled / optimized / DLL files
