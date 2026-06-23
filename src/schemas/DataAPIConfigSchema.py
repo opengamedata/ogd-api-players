@@ -13,11 +13,18 @@ from typing import Any, Dict, List
 
 # import OGD libraries
 from ogd.core.schemas.configs.data_sources.MySQLSourceSchema import MySQLSchema
-from ogd.apis.schemas.ServerConfigSchema import ServerConfigSchema
+from ogd.apis.configs.ServerConfig import ServerConfig
 
 # import local files
 
-class DataAPIConfigSchema(ServerConfigSchema):
+class DataAPIConfigSchema(ServerConfig):
+    """_summary_
+
+    TODO : Rename to PlayerAPIConfig
+
+    :param ServerConfig: _description_
+    :type ServerConfig: _type_
+    """
     def __init__(self, name:str, all_elements:Dict[str, Any], logger:logging.Logger):
         self._state_dbs        : Dict[str, MySQLSchema]
         self._ogd_core         : Path
@@ -43,7 +50,12 @@ class DataAPIConfigSchema(ServerConfigSchema):
 
         _used = {"DB_CONFIG", "OGD_CORE_PATH", "GOOGLE_CLIENT_ID"}
         _leftovers = { key : val for key,val in all_elements.items() if key not in _used }
-        super().__init__(name=name, all_elements=_leftovers, logger=logger)
+        super().__init__(
+            name=name,
+            debug_level=None,
+            version=None,
+            other_elements=_leftovers
+        )
 
     @property
     def StateDatabases(self) -> Dict[str, MySQLSchema]:
