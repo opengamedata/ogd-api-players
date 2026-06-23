@@ -22,7 +22,7 @@ class t_GameStateAPI(TestCase):
 
     def test_home(self):
         print(f"GET test at {self.testing_config.ExternEndpoint}")
-        result = requests.get(url=base)
+        result = requests.get(url=self.testing_config.ExternEndpoint)
         if result is not None:
             print(f"Result of get:\n{result.text}")
         else:
