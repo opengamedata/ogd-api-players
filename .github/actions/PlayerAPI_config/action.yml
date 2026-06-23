@@ -5,6 +5,10 @@ branding:
   icon: 'clipboard'
   color: 'blue'
 inputs:
+  api_version:
+    description: "The version of the API code."
+    required: false
+    default: 'Testing'
   db_host:
     description: "Host of the database"
     required: true
@@ -57,6 +61,9 @@ runs:
       shell: bash
     - name: Set User DB name
       run: sed -i 's/fieldday_users/${{inputs.fd_users_db_name}}/g' ${{ inputs.config_path }}/config.py
+      shell: bash
+    - name: Set API Version
+      run: sed -i 's@"VER":0@"VER":${{inputs.api_version}}@g'  ${{ inputs.config_path }}/config.py
       shell: bash
     - name: Set Path to App
       run: sed -i 's@DEPLOY_PATH@${{inputs.deploy_path}}@g' ${{inputs.app_path}}
