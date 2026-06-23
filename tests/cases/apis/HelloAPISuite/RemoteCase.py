@@ -6,8 +6,8 @@ from ogd.apis.models.APIRequest import APIRequest
 from ogd.apis.models.APIResponse import APIResponse
 from ogd.common.utils.Logger import Logger
 # import locals
-from tests.config import t_config
 from tests.PlayerAPITestConfig import PlayerAPITestConfig
+from tests.config import t_config
 
 class test_Hello(TestCase):
     @classmethod
