@@ -12,7 +12,7 @@ from tests.PlayerAPITestConfig import PlayerAPITestConfig
 class test_Hello(TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.testing_config = PlayerAPITestConfig.FromDict(name="FileAPITestConfig", unparsed_elements=t_config.settings)
+        cls.testing_config = PlayerAPITestConfig.FromDict(name="PlayerAPITestConfig", unparsed_elements=t_config.settings)
 
         _level       = logging.DEBUG if cls.testing_config.Verbose else logging.INFO
         Logger.std_logger.setLevel(_level)
