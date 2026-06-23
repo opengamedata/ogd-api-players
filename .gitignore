@@ -1,6 +1,6 @@
 # Specific files to ignore
 shared/config/*config.py
-tests/t_config.py
+tests/config/t_config.py
 tests/Makefile
 .vscode/*.json
 .pylintrc
