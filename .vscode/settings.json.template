@@ -7,7 +7,7 @@
       "-t",
       "./",
       "-p",
-      "t_*.py"
+      "*Case.py"
    ],
    "python.testing.pytestEnabled": false
 }
