@@ -20,3 +20,18 @@ jobs:
       branch: ${{ github.ref_name }}
       remove: false
     secrets: inherit
+
+  testbed_hello_remote:
+    name: HelloAPI Remote Testbed
+    needs: [ci_deploy]
+    uses: ./.github/workflows/TEST_HelloAPI_remote.yml
+
+  testbed_playerid_api_remote:
+    name: PlayerIDAPI Remote Testbeds
+    needs: [ci_deploy]
+    uses: ./.github/workflows/TEST_PlayerIDAPI_remote.yml
+
+  testbed_gamestateapi_remote:
+    name: GameStateAPI Remote Testbeds
+    needs: [ci_deploy]
+    uses: ./.github/workflows/TEST_GameStateAPI_remote.yml

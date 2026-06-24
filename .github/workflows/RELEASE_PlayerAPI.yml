@@ -21,3 +21,18 @@ jobs:
       as_latest: true
       remove: false
     secrets: inherit
+
+  testbed_hello_remote:
+    name: HelloAPI Remote Testbed
+    needs: [release_deploy]
+    uses: ./.github/workflows/TEST_HelloAPI_remote.yml
+
+  testbed_playerid_api_remote:
+    name: PlayerIDAPI Remote Testbeds
+    needs: [release_deploy]
+    uses: ./.github/workflows/TEST_PlayerIDAPI_remote.yml
+
+  testbed_gamestateapi_remote:
+    name: GameStateAPI Remote Testbeds
+    needs: [release_deploy]
+    uses: ./.github/workflows/TEST_GameStateAPI_remote.yml
