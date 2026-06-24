@@ -1,10 +1,10 @@
 # import libraries
 import logging
-import requests
 from unittest import TestCase
 # import ogd libraries
 from ogd.apis.models.APIRequest import APIRequest
 from ogd.apis.models.APIResponse import APIResponse
+from ogd.apis.models.enums.RESTType import RESTType
 from ogd.common.utils.Logger import Logger
 # import locals
 from tests.PlayerAPITestConfig import PlayerAPITestConfig
@@ -15,37 +15,65 @@ class t_PlayerIDAPI(TestCase):
     """
     @classmethod
     def setUpClass(cls):
-        cls.testing_config = PlayerAPITestConfig.FromDict(name="PlayerAPITestConfig", unparsed_elements=t_config.settings)
-
-        _level = logging.DEBUG if cls.testing_config.Verbose else logging.INFO
-        Logger.std_logger.setLevel(_level)
-
+        cls.testing_cfg = PlayerAPITestConfig.FromDict(name="PlayerAPITestConfig", unparsed_elements=t_config.settings)
+        Logger.InitializeLogger(
+            level       = logging.DEBUG if cls.testing_cfg.Verbose else logging.INFO,
+            use_logfile = False
+        )
         cls.TEST_PLAYER_ID = "ImmortanJoe"
         cls.TEST_GAME      = "AQUALAB"
 
     def test_home(self):
-        result = requests.get(url=self.testing_config.ExternEndpoint)
-        if result is not None:
-            print(f"Result of get:\n{result.text}")
+        url=self.testing_cfg.ExternEndpoint
+        # 1. Run request
+        try:
+            response : APIResponse = APIRequest(
+                url=url,
+                request_type=RESTType.GET,
+                params={},
+                timeout=2
+            ).Execute(logger=Logger.std_logger)
+        except Exception as err: # pylint: disable=broad-exception-caught
+            self.fail(str(err))
         else:
-            print(f"No response to GET request.")
-        print()
+        # 2. Perform assertions
+            self.assertIsNotNone(response, f"No response from {url}")
+            self.assertTrue(response.OK, f"Bad status from {url}: {response.Status}")
+            self.assertEqual(response.Type, RESTType.GET, f"Bad type from {url}")
+            self.assertIsNone(response.Value, f"Bad value type from {url}")
 
     def test_get(self):
-        url = f"{self.testing_config.ExternEndpoint}/player/"
-        print(f"GET test at {url}")
-        result = requests.get(url=url)
-        if result is not None:
-            print(f"Result of get:\n{result.text}")
+        url = f"{self.testing_cfg.ExternEndpoint}/player/"
+        try:
+            response : APIResponse = APIRequest(
+                url=url,
+                request_type=RESTType.GET,
+                params={},
+                timeout=2
+            ).Execute(logger=Logger.std_logger)
+        except Exception as err: # pylint: disable=broad-exception-caught
+            self.fail(str(err))
         else:
-            print(f"No response to GET request.")
+        # 2. Perform assertions
+            self.assertIsNotNone(response, f"No response from {url}")
+            self.assertTrue(response.OK, f"Bad status from {url}: {response.Status}")
+            self.assertEqual(response.Type, RESTType.GET, f"Bad type from {url}")
+            self.assertIsNone(response.Value, f"Bad value type from {url}")
 
     def test_put(self):
-        url = f"{self.testing_config.ExternEndpoint}/player/"
-        print(f"POST test at {url}")
-        params = { "player_id":"test_player", "name":"Test" }
-        result = requests.put(url=url, params=params)
-        if result is not None:
-            print(f"Result of post:\n{result.text}")
+        url = f"{self.testing_cfg.ExternEndpoint}/player/"
+        try:
+            response : APIResponse = APIRequest(
+                url=url,
+                request_type=RESTType.POST,
+                params={ "player_id":"test_player", "name":"Test" },
+                timeout=2
+            ).Execute(logger=Logger.std_logger)
+        except Exception as err: # pylint: disable=broad-exception-caught
+            self.fail(str(err))
         else:
-            print(f"No response to POST request.")
+        # 2. Perform assertions
+            self.assertIsNotNone(response, f"No response from {url}")
+            self.assertTrue(response.OK, f"Bad status from {url}: {response.Status}")
+            self.assertEqual(response.Type, RESTType.POST, f"Bad type from {url}")
+            self.assertIsNone(response.Value, f"Bad value type from {url}")
