@@ -1,0 +1,112 @@
+"""
+ServerConfigSchema
+
+Contains a Schema class for managing config data for server configurations.
+"""
+
+# import standard libraries
+import logging
+from typing import Dict, Final, Optional, Self
+
+# import 3rd-party libraries
+
+# import OGD libraries
+from ogd.common.configs.TestConfig import TestConfig
+from ogd.common.utils.typing import Map
+
+# import local files
+
+class PlayerAPITestConfig(TestConfig):
+    _DEFAULT_ENDPOINT    : Final[str] = "https://ogd-staging.fielddaylab.wisc.edu/wsgi-bin/opengamedata/apis/opengamedata-api-files/main/app.wsgi"
+    _DEFAULT_API_VERSION : Final[str] = "Testing"
+
+    # *** BUILT-INS & PROPERTIES ***
+
+    def __new__(cls, *args, **kwargs):
+        if not hasattr(cls, '_instance'):
+            cls._instance = super(PlayerAPITestConfig, cls).__new__(cls)
+        return cls._instance
+
+    def __init__(self, name:str,
+                 extern_endpoint:Optional[str]=None, api_version:Optional[str]=None,
+                 verbose:Optional[bool]=None,        other_elements:Optional[Map]=None):
+
+        unparsed_elements : Map = other_elements or {}
+
+        if not hasattr(self, '_initialized'):
+            self._extern_server : str
+            self._api_version   : str
+
+            self._extern_server = extern_endpoint if extern_endpoint is not None else self._parseExternEndpoint(unparsed_elements=unparsed_elements, schema_name=name)
+            self._api_version   = api_version     if api_version     is not None else self._parseAPIVersion(unparsed_elements=unparsed_elements, schema_name=name)
+
+            super().__init__(
+                name=name,
+                verbose=verbose,
+                other_elements=unparsed_elements
+            )
+            self._initialized = True
+
+    @property
+    def ExternEndpoint(self) -> str:
+        return self._extern_server
+
+    @property
+    def APIVersion(self) -> str:
+        return self._api_version
+
+    # *** IMPLEMENT ABSTRACT FUNCTIONS ***
+
+    @property
+    def AsMarkdown(self) -> str:
+        ret_val : str
+
+        ret_val = self.Name
+        return ret_val
+
+    @classmethod
+    def Default(cls):
+        return PlayerAPITestConfig(
+            name="DefaultFileAPITests",
+            extern_endpoint=PlayerAPITestConfig._DEFAULT_ENDPOINT,
+            api_version=PlayerAPITestConfig._DEFAULT_API_VERSION,
+            verbose=PlayerAPITestConfig._DEFAULT_VERBOSE,
+            other_elements={}
+        )
+
+    @classmethod
+    def _fromDict(cls, name:str, unparsed_elements:Map,
+                  key_overrides:Optional[Dict[str, str]]=None,
+                  default_override:Optional[Self]=None):
+        return PlayerAPITestConfig(name=name, extern_endpoint=None, api_version=None,
+                                 verbose=None, other_elements=unparsed_elements)
+
+    @staticmethod
+    def _parseExternEndpoint(unparsed_elements:Map, schema_name:Optional[str]=None) -> str:
+        ret_val : str
+
+        ret_val = PlayerAPITestConfig.ParseElement(
+            unparsed_elements=unparsed_elements,
+            valid_keys=["EXTERN_ENDPOINT"],
+            to_type=str,
+            default_value=PlayerAPITestConfig._DEFAULT_ENDPOINT,
+            remove_target=False,
+            schema_name=schema_name
+        )
+
+        return ret_val
+
+    @staticmethod
+    def _parseAPIVersion(unparsed_elements:Map, schema_name:Optional[str]=None) -> str:
+        ret_val : str
+
+        ret_val = PlayerAPITestConfig.ParseElement(
+            unparsed_elements=unparsed_elements,
+            valid_keys=["API_VERSION"],
+            to_type=str,
+            default_value=PlayerAPITestConfig._DEFAULT_API_VERSION,
+            remove_target=False,
+            schema_name=schema_name
+        )
+
+        return ret_val

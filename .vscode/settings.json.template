@@ -1,0 +1,13 @@
+{
+   "python.testing.unittestEnabled": true,
+   "python.testing.unittestArgs": [
+      "-v",
+      "-s",
+      "./tests/cases",
+      "-t",
+      "./",
+      "-p",
+      "*Case.py"
+   ],
+   "python.testing.pytestEnabled": false
+}
