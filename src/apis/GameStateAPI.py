@@ -4,20 +4,23 @@ from flask import Flask, request
 from flask_restful import Resource, Api, reqparse
 from mysql.connector import Error as MySQLError
 from mysql.connector.connection import MySQLConnection
-# import locals
+# import ogd libraries
 from ogd.core.interfaces.MySQLInterface import SQL
-from shared.config.config import settings
+from ogd.core.schemas.configs.GameSourceSchema import GameSourceSchema
+# import locals
+from schemas.DataAPIConfigSchema import DataAPIConfigSchema
 
 import time
 
 class GameStateAPI:
 
     @staticmethod
-    def register(app:Flask):
+    def register(app:Flask, settings:DataAPIConfigSchema):
         # Expected WSGIScriptAlias URL path is /playerGameState
         api = Api(app)
         api.add_resource(GameStateAPI.GameStateLoad, '/load')
         api.add_resource(GameStateAPI.GameStateSave, '/save')
+        GameStateAPI.server_config = settings
 
     class GameStateLoad(Resource):
         def get(self):
@@ -63,8 +66,9 @@ class GameStateAPI:
             offset = args['offset'] if args['offset'] is not None else 0
 
             # Step 2: get states from database.
-            fd_config = settings["DB_CONFIG"]["fd_users"]
-            tunnel, db_conn = SQL.ConnectDB(db_settings=fd_config)
+            fd_config = GameStateAPI.server_config #["DB_CONFIG"]["fd_users"]
+            source_schema = GameSourceSchema()
+            tunnel, db_conn = SQL.ConnectDB(schema=source_schema)
             if db_conn is not None:
                 query_string = f"SELECT `game_state` from {fd_config['DB_NAME']}.game_states\n\
                                  WHERE `player_id`=%s AND `game_id`=%s ORDER BY `save_time` DESC LIMIT %s, %s;"
