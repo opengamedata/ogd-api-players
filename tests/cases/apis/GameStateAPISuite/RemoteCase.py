@@ -43,12 +43,11 @@ class RemoteCase(TestCase):
 
     def test_get(self):
         url = f"{self.testing_cfg.ExternEndpoint}/player/{self.TEST_PLAYER_ID}/game/{self.TEST_GAME}/state"
-        params = { 'count':1, 'offset':0 }
         try:
             response : APIResponse = APIRequest(
                 url=url,
                 request_type=RESTType.GET,
-                params=params,
+                params={ 'count':1, 'offset':0 },
                 timeout=2
             ).Execute(logger=Logger.std_logger)
         except Exception as err: # pylint: disable=broad-exception-caught
@@ -62,12 +61,11 @@ class RemoteCase(TestCase):
 
     def test_get_multi(self):
         url = f"{self.testing_cfg.ExternEndpoint}/player/{self.TEST_PLAYER_ID}/game/{self.TEST_GAME}/state"
-        params = { 'count':3, 'offset':0 }
         try:
             response : APIResponse = APIRequest(
                 url=url,
                 request_type=RESTType.GET,
-                params=params,
+                params={ 'count':3, 'offset':0 },
                 timeout=2
             ).Execute(logger=Logger.std_logger)
         except Exception as err: # pylint: disable=broad-exception-caught
@@ -81,13 +79,11 @@ class RemoteCase(TestCase):
 
     def test_post(self):
         url = f"{self.testing_cfg.ExternEndpoint}/player/{self.TEST_PLAYER_ID}/game/{self.TEST_GAME}/state"
-        print(f"POST test at {url}")
-        params = { 'state':"{'data':'test data'}" }
         try:
             response : APIResponse = APIRequest(
                 url=url,
                 request_type=RESTType.POST,
-                params=params,
+                params={ 'state':"{'data':'test data'}" },
                 timeout=2
             ).Execute(logger=Logger.std_logger)
         except Exception as err: # pylint: disable=broad-exception-caught
