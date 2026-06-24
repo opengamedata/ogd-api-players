@@ -1,6 +1,5 @@
 # import libraries
 import logging
-import requests
 from unittest import TestCase
 # import ogd libraries
 from ogd.apis.models.APIRequest import APIRequest
