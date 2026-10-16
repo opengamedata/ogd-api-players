@@ -11,12 +11,42 @@ on:
     - 'requirements.txt'
 
 jobs:
-  ci_deploy:
-    name: CI Deploy
-    # needs: build
+  get_branch:
+    name: Get Branch
+    runs-on: ubuntu-24.04
+    outputs:
+      branch_tag: ${{ steps.get_branch.outputs.branch-name }}
+    steps:
+      - name: Get Branch
+        id: get_branch
+        uses: opengamedata/actions-get-branch@v1.1
+        with:
+          n: 20
+          remove: '\.'
+
+  package:
+    name: Test-Build Python Package
+    needs: [get_branch]
+    uses: ./.github/workflows/PACKAGE_PlayerAPI.yml
+    with:
+      with_caching: false
+
+  build:
+    name: Build Docker Image
+    needs: [get_branch, package]
+    uses: ./.github/workflows/BUILD_PlayerAPI.yml
+    with:
+      image_tag: ${{ needs.setup.outputs.branch_tag }}
+    secrets:
+      image_repository: ${{ secrets.DOCKER_IMAGE_REPO }}
+
+  deploy:
+    name: CI Deploy to GCP
+    needs: [setup, build]
     uses: ./.github/workflows/DEPLOY_PlayerAPI.yml
     with:
-      deploy_host: ${{ vars.OGD_STAGING_HOST }}
-      branch: ${{ github.ref_name }}
+      service_name: "ogd-api-players-test"
+      image_name: ${{ needs.build.outputs.image_name }}
+      revision_tag: "t-${{ needs.setup.outputs.branch_tag }}-t"
       remove: false
     secrets: inherit

@@ -7,17 +7,97 @@ on:
   #    - '*'
   workflow_dispatch:
   release:
-    types: released
+    types: [released, prereleased]
 
 jobs:
-  release_deploy:
+
+  # *** 1. Pre-Deploy Testing ***
+
+  # *** 2. Package and Publish ***
+
+  package:
+    name: Build Python Package
+    uses: ./.github/workflows/PACKAGE_PlayerAPI.yml
+    with:
+      with_caching: true
+      build_name: &artifact opengamedata-api-players-build-${{ github.run_id }}-${{ github.run_attempt }}
+
+  publish:
+    name: Publish Python Package
+    needs: [package]
+    runs-on: ubuntu-24.04
+    environment:
+      name: ${{ case(github.event.action == 'released', 'pypi_release', 'pypi_prerelease') }}
+      url: https://pypi.org/manage/project/opengamedata-api-players/
+    permissions:
+      id-token: write
+    steps:
+
+    - name: Download Build Artifact
+      id: cached-build
+      uses: actions/download-artifact@v7.0.0
+      with:
+        name: *artifact
+        path: ./dist/
+
+    - name: Publish Prerelease to Test PyPI
+      if: github.event.action == 'prereleased'
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        print-hash: true
+        repository-url: https://test.pypi.org/legacy/
+
+    - name: Publish Release to PyPI
+      if: github.event.action == 'released'
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        print-hash: true
+
+  wait_for_pypi:
+    name: Wait for PyPI to Update
+    needs: [publish]
+    environment: release-wait-deploy # use environment to force waiting a few minutes after the PyPI release.
+    runs-on: ubuntu-24.04
+    steps:
+    - name: Done Waiting
+      run: echo "Done waiting."
+      shell: bash
+
+  # *** 3. Deploy to GCP ***
+
+  build:
+    name: Build Docker Image for Deploy
+    needs: [wait_for_pypi]
+    uses: ./.github/workflows/BUILD_PlayerAPI.yml
+    with:
+      image_tag:  ${{ github.ref_name }}
+    secrets:
+      image_repository: ${{ secrets.DOCKER_IMAGE_REPO }}
+
+  get_branch:
+    name: Get Branch
+    needs: [build]
+    runs-on: ubuntu-24.04
+    outputs:
+      branch_tag: ${{ steps.get-branch.outputs.branch-name }}
+    steps:
+    - name: Get Branch
+      id: get-branch
+      uses: opengamedata/actions-get-branch@v1.1
+      with:
+        n: 20
+        remove: '\.'
+
+  deploy:
     name: Release Deploy
-    if: github.event.action == 'released'
-    # needs: [build, pypi_release, wait_for_pypi]
+    needs: [build, get_branch]
     uses: ./.github/workflows/DEPLOY_PlayerAPI.yml
     with:
-      deploy_host: ${{ vars.OGD_SERVICES_HOST }}
-      branch: ${{ github.ref_name }}
-      as_latest: true
-      remove: false
+      service_name: "ogd-api-players"
+      image_name:   ${{ needs.build.outputs.image_name }}
+      revision_tag: ${{ case(github.event.action == 'released', 'latest', needs.get_branch.outputs.branch_tag) }}
+      remove:       false
+      as_latest:    ${{ case(github.event.action == 'released', true, false) }}
     secrets: inherit
+
+  # *** 4. Remote Testbeds ***
