@@ -6,8 +6,13 @@ on:
   push:
     paths:
     - '.github/workflows/CI_PlayerAPI.yml'
+    - '.github/workflows/PACKAGE_PlayerAPI.yml'
+    - '.github/workflows/BUILD_PlayerAPI.yml'
+    - '.github/workflows/DEPLOY_PlayerAPI.yml'
     - '.github/actions/**'
+    - 'package/**'
     - 'src/**'
+    - 'Dockerfile'
     - 'requirements.txt'
 
 jobs:
